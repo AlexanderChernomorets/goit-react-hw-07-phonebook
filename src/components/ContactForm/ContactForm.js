@@ -1,7 +1,4 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { filterValue, getItem, newContacts } from 'redux/itemsContacts';
-import { nanoid } from 'nanoid';
+import { useContactForm } from 'hook/useContactForm';
 import {
   Title,
   FormContact,
@@ -10,39 +7,8 @@ import {
   FormInput,
 } from './ContactForm.styled';
 
-const initialState = {
-  name: '',
-  number: '',
-};
-
 function ContactForm() {
-  const [{ name, number }, setState] = useState(initialState);
-  const dispatch = useDispatch();
-  const contacts = useSelector(getItem);
-
-  function onChange(e) {
-    const { name, value } = e.target;
-    setState(prevState => ({ ...prevState, [name]: value }));
-  }
-
-  function onSubmit(e) {
-    e.preventDefault();
-    const newCont = {
-      id: nanoid(10),
-      name,
-      number,
-    };
-
-    if (contacts.some(x => x.name === newCont.name)) {
-      alert(`${newCont.name} is already in contacts`);
-      return;
-    }
-
-    dispatch(newContacts(newCont));
-    dispatch(filterValue(''));
-
-    setState({ ...initialState });
-  }
+  const { name, setName, phone, setPhone, onSubmit } = useContactForm();
 
   return (
     <FormContact onSubmit={onSubmit}>
@@ -56,7 +22,7 @@ function ContactForm() {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           value={name}
           placeholder="🙍‍♂️ Enter contact name"
-          onChange={onChange}
+          onChange={e => setName(e.target.value)}
           required
         />
       </FormLabel>
@@ -67,9 +33,9 @@ function ContactForm() {
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          value={number}
+          value={phone}
           placeholder="📞 Enter phone number"
-          onChange={onChange}
+          onChange={e => setPhone(e.target.value)}
           required
         />
       </FormLabel>

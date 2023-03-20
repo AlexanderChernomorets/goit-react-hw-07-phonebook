@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { filterValue, getFilter } from 'redux/itemsContacts';
+import { getFilterContacts, setFilter } from 'redux/filterContacts';
 import {
   FilterSection,
   FilterTitle,
@@ -8,7 +8,7 @@ import {
 
 function FilterContact() {
   const dispatch = useDispatch();
-  const filter = useSelector(getFilter);
+  const filter = useSelector(getFilterContacts);
   return (
     <FilterSection>
       <FilterTitle>
@@ -18,7 +18,7 @@ function FilterContact() {
           name="filter"
           value={filter}
           placeholder="🔎 Enter name for Search"
-          onChange={e => dispatch(filterValue(e.target.value.toLowerCase()))}
+          onChange={e => dispatch(setFilter(e.target.value.toLowerCase()))}
         />
       </FilterTitle>
     </FilterSection>
